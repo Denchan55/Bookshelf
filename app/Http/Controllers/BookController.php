@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Http\Requests\BookStoreRequest;
 use App\Models\Book;
 use App\Models\Genre;
+use App\Models\User;
 
 class BookController extends Controller
 {
@@ -45,9 +46,20 @@ public function index(): View
     /**
      * 書籍登録処理
      */
-    public function store(Request $request)
+    public function store(BookStoreRequest $request)
     {
-        // TODO: バリデーションと保存処理を実装
+        $validated = $request->validated();
+        $genreIds = $validated['genres'];
+        unset($validated['genres']);
+
+        $book = Book::create([
+            ...$validated,
+            'image_url' => $validated['image_url'] ?? 'https://placehold.co/600x400',
+            'user_id' => User::first()->id,
+        ]);
+
+        $book->genres()->sync($genreIds);
+
         return redirect()->route('books.index');
     }
 }

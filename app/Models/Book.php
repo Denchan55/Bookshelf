@@ -7,6 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
+    protected $fillable = [
+        'title',
+        'author',
+        'isbn',
+        'published_at',
+        'description',
+        'image_url',
+        'user_id',
+    ];
+
     public function genres()
 {
     return $this->belongsToMany(Genre::class);
