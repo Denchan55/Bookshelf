@@ -24,9 +24,9 @@ public function index(): View
     /**
      * 書籍詳細を表示
      */
-    public function show($id)
+    public function show(Book $book)
 {
-    $book = Book::with('genres')->findOrFail($id);
+    $book->load(['genres', 'reviews.user', 'reviews.likedByUsers']);
     return view('books.show', compact('book'));
 }
 
